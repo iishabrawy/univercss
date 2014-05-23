@@ -1,0 +1,199 @@
+@mixin u-list__itemsDirection($flowMethod: 'float', $dir: default)  {
+  @if ($flowMethod == 'inline')  and ($dir != default) {
+    text-align: $dir;
+  }
+
+  > li{
+    @if ($flowMethod == 'float')  {
+      @if ($dir == default) {
+        $dir: $uni-dirDefault;
+      }
+      float: $dir;
+    }
+  }
+}
+
+@mixin u-list__itemsFlow($flowMethod: 'float', $dir: default, $collapse: false)  {
+  @include u-list__itemsDirection($flowMethod, $dir);
+
+  @if ($flowMethod == 'inline')  and ($collapse == true) {
+    @include u-removeInlineSpace();
+  }
+
+  > li{
+    @if ($flowMethod == 'inline') {
+      @if ($collapse == true) {
+        @include u-fixInlineSpace();
+      }
+      @include u-display(inline-block);
+      white-space:nowrap;
+    } @else if ($flowMethod == 'float') {
+
+    } @else if ($flowMethod == 'default') {
+      display: list-item;
+      float: none;
+    }
+  }
+}
+
+@mixin u-list__linksDisplay($display: inline-block, $important: false) {
+  > li {
+    > a {
+      @include u-display($display, false);
+    }
+  }
+}
+
+// ==================================================================
+// Main Mixin: used to output classes and silent holders
+// ==================================================================
+
+@mixin UtilityLists($isSilent: true, $prefix: false) {
+  $class: if($isSilent,'%','.');
+  $silentClass: '%';
+  @if ($prefix){
+    $class: $class + $prefix;
+    $silentClass: $silentClass + $prefix;
+  }
+  $notSilent: if($isSilent, false, true);
+  $output: $uni-outputUtilitiesClasses-Lists;
+
+  @if ($output) or ($isSilent) {
+    #{$class}u-listUnstyled {
+      @if ($notSilent) {
+        @extend #{$silentClass}u-listUnstyled;
+      } @else {
+        list-style: none outside none;
+        padding-#{$uni-dirStart}:  0;
+      }
+    }
+
+    #{$class}u-listUnstyledRecursive {
+      @if ($notSilent) {
+        @extend #{$silentClass}u-listUnstyledRecursive;
+      } @else {
+        &,
+        ul,
+        ol {
+          @extend #{$silentClass}u-listUnstyled;
+        }
+      }
+    }
+
+    #{$class}u-listSimple {
+      @if ($notSilent) {
+        @extend #{$silentClass}u-listSimple;
+      } @else {
+        @extend #{$silentClass}u-listUnstyled;
+        margin-#{$uni-dirStart}: 0;
+        margin-bottom: 0;
+      }
+    }
+
+    #{$class}u-listSimpleRecursive {
+      @if ($notSilent) {
+        @extend #{$silentClass}u-listSimpleRecursive;
+      } @else {
+        &,
+        ul,
+        ol {
+          @extend #{$silentClass}u-listSimple;
+        }
+      }
+    }
+
+
+    #{$class}u-dlSimple {
+      @if ($notSilent) {
+        @extend #{$silentClass}u-dlSimple;
+      } @else {
+        margin-#{$uni-dirStart}: 0;
+        margin-bottom: 0;
+        dd {
+          margin-#{$uni-dirStart}: 0;
+        }
+        dt {
+          font-weight: normal;
+        }
+      }
+    }
+
+
+    #{$class}u-listNumbred {
+      @if $notSilent {
+        @extend #{$silentClass}u-listNumbred;
+      } @else {
+        list-style-type: decimal;
+      }
+    }
+
+
+    #{$class}u-list__itemsFlow {
+      @if ($notSilent) {
+        @extend #{$silentClass}u-list__itemsFlow;
+      } @else {
+        @include u-list__itemsFlow();
+      }
+    }
+
+    $options: float, inline, default;
+    $optionsFlags: Float, Inline, Default;
+
+    @for $i from 1 through length($options) {
+      $option: nth($options, $i);
+      $optionFlag: nth($optionsFlags, $i);
+      #{$class}u-list__itemsFlow#{$optionFlag} {
+        @if ($notSilent) {
+          @extend #{$silentClass}u-list__itemsFlow#{$optionFlag};
+        } @else {
+          @include u-list__itemsFlow($option);
+        }
+      }
+
+      @if ($option == inline) {
+        #{$class}u-list__itemsFlow#{$optionFlag}Collapse{
+          @if ($notSilent) {
+            @extend #{$silentClass}u-list__itemsFlow#{$optionFlag}Collapse;
+          } @else {
+            @include u-list__itemsFlow($option, default, true);
+          }
+        }
+      }
+    }
+
+    #{$class}u-list__linksBlock {
+      @if $notSilent {
+        @extend #{$silentClass}u-list__linksBlock;
+      } @else {
+        @include u-list__linksDisplay(block);
+      }
+    }
+
+    #{$class}u-list__linksInlineBlock {
+      @if $notSilent {
+        @extend #{$silentClass}u-list__linksInlineBlock;
+      } @else {
+        @include u-list__linksDisplay(inline-block);
+      }
+    }
+
+
+
+    // Links padding size
+    $flags: N, T, S, M, L;
+    $plus: 0.5;
+    $n: 0;
+    @each $flag in $flags {
+      #{$class}u-list__linksSize#{$flag} {
+        @if ($notSilent) {
+          @extend #{$silentClass}u-list__linksSize#{$flag};
+        } @else {
+          > li > a {
+            @include u-inlineBlockSize($n);
+          }
+        }
+      }
+      $n: $n + $plus;
+    }
+  }
+}

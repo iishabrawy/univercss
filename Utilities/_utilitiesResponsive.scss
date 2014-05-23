@@ -1,0 +1,14 @@
+@if $uni-responsive {
+  @each $breakpoint in $uni-breakpoints {
+      $name: nth($breakpoint, 1);
+      @include u-mediaQuery($name) {
+        $name: quote($name) + '-';
+        @include UtilityRhythm(true, $name);
+        @include UtilitySpaces(true, $name);
+        @include UtilityFlow(true, $name);
+        @include UtilityVisibility(true, $name);
+        @include UtilityLists(true, $name);
+        @include UtilityPrototype(true, $name);
+      }
+  }
+}

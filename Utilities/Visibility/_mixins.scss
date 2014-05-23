@@ -1,0 +1,160 @@
+@mixin u-hidden($important: false) {
+  $important: if($important,'!important','');
+  display: none #{$important};
+  visibility: hidden;
+}
+
+@mixin u-notHidden($important: false, $display: block) {
+  $important: if($important,'!important','');
+  display: $display #{$important};
+  visibility: visible;
+}
+
+
+@mixin u-textHidden {
+  background-color: transparent;
+  border: 0;
+  overflow: hidden;
+  /* IE 6/7 fallback */
+  *text-indent: -9999px;
+
+  &:before {
+    content: "";
+    display: block;
+    width: 0;
+    height: 100%;
+  }
+}
+
+@mixin u-visHidden {
+    border: 0;
+    clip: rect(0 0 0 0);
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    padding: 0;
+    position: absolute;
+    width: 1px;
+}
+
+@mixin u-notVisHidden {
+  clip: auto;
+  height: auto;
+  margin: 0;
+  overflow: visible;
+  position: static;
+  width: auto;
+}
+
+@mixin u-unvisible {
+  visibility: hidden;
+}
+
+@mixin u-notUnvisible {
+  visibility: visibility;
+}
+
+@mixin u-focusable {
+  &:active,
+  &:focus {
+    @include u-notVisHidden();
+  }
+}
+// ==================================================================
+// Main Mixin: used to output classes and silent holders
+// ==================================================================
+
+@mixin UtilityVisibility($isSilent: true, $prefix: false) {
+  $class: if($isSilent,'%','.');
+  $silentClass: '%';
+  @if ($prefix){
+    $class: $class + $prefix;
+    $silentClass: $silentClass + $prefix;
+  }
+  $notSilent: if($isSilent, false, true);
+  $output: $uni-outputUtilitiesClasses-Visibility;
+
+  @if ($output) or ($isSilent) {
+
+    #{$class}u-hidden {
+      @if ($notSilent) {
+        @extend #{$silentClass}u-hidden;
+      } @else {
+        @include u-hidden();
+      }
+    }
+
+    #{$class}u-notHidden {
+      @if ($notSilent) {
+        @extend #{$silentClass}u-notHidden;
+      } @else {
+        @include u-notHidden();
+      }
+    }
+
+    #{$class}u-hiddenImp {
+      @if ($notSilent) {
+        @extend #{$silentClass}u-hiddenImp;
+      } @else {
+        @include u-hidden(true);
+      }
+    }
+
+    #{$class}u-notHiddenImp {
+      @if ($notSilent) {
+        @extend #{$silentClass}u-notHiddenImp;
+      } @else {
+        @include u-notHidden(true);
+      }
+    }
+
+    #{$class}u-textHidden {
+      @if ($notSilent) {
+        @extend #{$silentClass}u-textHidden;
+      } @else {
+        @include u-textHidden();
+      }
+    }
+
+    #{$class}u-visHidden {
+      @if ($notSilent) {
+        @extend #{$silentClass}u-visHidden;
+      } @else {
+        @include u-visHidden();
+      }
+    }
+
+    #{$class}u-notVisHidden {
+      @if ($notSilent) {
+        @extend #{$silentClass}u-notVisHidden;
+      } @else {
+        @include u-notVisHidden();
+      }
+    }
+
+    #{$class}u-unvisible {
+      @if ($notSilent) {
+        @extend #{$silentClass}u-unvisible;
+      } @else {
+        @include u-unvisible();
+      }
+    }
+
+    #{$class}u-notUnvisible {
+      @if ($notSilent) {
+        @extend #{$silentClass}u-notUnvisible;
+      } @else {
+        @include u-notUnvisible();
+      }
+    }
+
+    #{$class}u-focusable {
+      @if ($notSilent) {
+        @extend #{$silentClass}u-focusable;
+      } @else {
+        @include u-focusable();
+      }
+    }
+
+  }
+}

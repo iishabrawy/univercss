@@ -1,0 +1,13 @@
+p,
+address {
+  @extend %base-u-rhythmBlockMargin;
+}
+
+hr {
+  border: none;
+  border-bottom: 1px solid;
+  @extend %base-u-marginVSReset;
+  margin-bottom: rhythmSpace(2) - 1px;
+}
+
+

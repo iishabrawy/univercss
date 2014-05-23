@@ -1,0 +1,8 @@
+* {
+  @extend %base-u-borderBox;
+}
+
+html {
+  font-size: $uni-baseFontSize;
+  line-height: 1.5;
+}

@@ -1,0 +1,169 @@
+//=====================================================================================================
+// Spacing helpers
+//
+// A,T,S,B,E,H,V  all,top,start,bottom,end,horizontal,vertical
+// N,T,S,M,L    none(0), tiny(1), small(2), medium(3), large(4)
+//=====================================================================================================
+@mixin u-space($method: 'padding', $pos: '', $important: false, $n: 1, $r: false, $spaceType: 'fixed') {
+  $important: if($important, '!important','');
+  $nGri: gridSpace($n, $spaceType);
+  $nRhy: rhythmSpace($n);
+
+
+
+
+  @if $pos == 'A' {
+    #{$method}: normalizeSpace($nRhy $nGri) #{$important};
+  } @else {
+    @if $pos == 'S' {$pos: $uni-dirStart}
+    @else if $pos == 'E' {$pos: $uni-dirEnd}
+    @else if $pos == 'B' {$pos: bottom}
+    @else if $pos == 'T' {$pos: top}
+
+    @if $r {
+      $rGri: gridSpace($r, $spaceType);
+      $rRhy: rhythmSpace($r);
+
+      @if $pos == left {
+        #{$method}: normalizeSpace($rRhy $rGri $rRhy $nGri) #{$important};
+      }
+      @else if $pos == right {
+        #{$method}: normalizeSpace($rRhy $nGri $rRhy $rGri) #{$important};
+      }
+      @else if $pos ==  bottom {
+        #{$method}: normalizeSpace($rRhy $rGri $nRhy) #{$important};
+      }
+      @else if $pos == top {
+        #{$method}: normalizeSpace($nRhy $rGri $rRhy $rGri) #{$important};
+      }
+      @else if $pos == 'V' {
+        #{$method}: normalizeSpace($nRhy $rGri) #{$important};
+      }
+      @else if $pos == 'H' {
+        #{$method}: normalizeSpace($rRhy $nGri) #{$important};
+      }
+    } @else {
+      @if $pos == left or $pos == 'H' {
+        #{$method}-left:  $nGri #{$important};
+      }
+      @if  $pos == right or $pos == 'H' {
+        #{$method}-right:  $nGri #{$important};
+      }
+      @if  $pos == top or $pos == 'V' {
+        #{$method}-top:  $nRhy #{$important};
+      }
+      @if  $pos == bottom or $pos == 'V' {
+        #{$method}-bottom:  $nRhy #{$important};
+      }
+    }
+  }
+}
+
+@mixin u-inlineBlockSize($n: 0.5) {
+  $pad: $n * 1em;
+  $line: ($n * 2) + 1;
+
+  padding: 0 $pad;
+  line-height: $line;
+}
+
+@mixin UtilitySpaces($isSilent: true, $prefix: false) {
+  $class: if($isSilent,'%','.');
+  $silentClass: '%';
+  @if ($prefix){
+    $class: $class + $prefix;
+    $silentClass: $silentClass + $prefix;
+  }
+  $notSilent: if($isSilent, false, true);
+  $output: $uni-outputUtilitiesClasses-Spaces;
+
+  @if ($output) or ($isSilent) {
+    /* Im inside 12907 #{$isSilent} #{$silentClass} */
+    $methods: margin, padding;
+    $positions: A, H, V, S, E, T, B;
+    $sizeFlags:  N, T, S, M, L;
+    $plus: 1;
+    $start: 0;
+
+    @each $method in $methods {
+      @each $pos in $positions {
+        $n: $start;
+        @each $sizeFlag in $sizeFlags {
+
+          #{$class}u-#{$method}#{$pos}#{$sizeFlag}Reset {
+            @if ($notSilent){
+              @extend #{$silentClass}u-#{$method}#{$pos}#{$sizeFlag}Reset;
+            } @else {
+              @include u-space($method, $pos, false, $n, 0);
+            }
+          }
+
+          #{$class}u-#{$method}#{$pos}#{$sizeFlag}ResetImp {
+            @if ($notSilent){
+              @extend #{$silentClass}u-#{$method}#{$pos}#{$sizeFlag}ResetImp;
+            } @else {
+              @include u-space($method, $pos, true, $n, 0);
+            }
+          }
+
+          $n: $n + $plus;
+
+        }
+      }
+    }
+
+
+    @each $method in $methods {
+      @each $pos in $positions {
+        $n: $start;
+        @each $sizeFlag in $sizeFlags {
+
+          #{$class}u-#{$method}#{$pos}#{$sizeFlag} {
+            @if ($notSilent){
+              @extend #{$silentClass}u-#{$method}#{$pos}#{$sizeFlag};
+            } @else {
+              @include u-space($method, $pos, false, $n, false);
+            }
+          }
+
+          #{$class}u-#{$method}#{$pos}#{$sizeFlag}Imp {
+            @if ($notSilent){
+              @extend #{$silentClass}u-#{$method}#{$pos}#{$sizeFlag}Imp;
+            } @else {
+              @include u-space($method, $pos, true, $n, false);
+            }
+          }
+
+          $n: $n + $plus;
+
+        }
+      }
+    }
+
+
+    #{$class}u-rhythmBlockMargin {
+      @if ($notSilent) {
+        @extend #{$silentClass}u-rhythmBlockMargin;
+      } @else {
+        @extend #{$silentClass}u-marginBSReset;
+      }
+    }
+
+    #{$class}u-rhythmBlockIndentMargin {
+      @if ($notSilent) {
+        @extend #{$silentClass}u-rhythmBlockIndentMargin ;
+      } @else {
+        @extend #{$silentClass}u-marginSS;
+      }
+    }
+
+    #{$class}u-rhythmBlockIndentPadding {
+      @if ($notSilent) {
+        @extend #{$silentClass}u-rhythmBlockIndentPadding ;
+      } @else {
+        @extend #{$silentClass}u-paddingSM;
+      }
+    }
+
+  }
+}

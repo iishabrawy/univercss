@@ -1,0 +1,206 @@
+// grid system components
+@mixin GZone--inline ($align: $uni-dirDefault) {
+    text-align: $align;
+    // remove space between GCell`s
+    @include u-removeInlineSpace();
+}
+
+@mixin GZone--nested ($gutter: 1) {
+  $gutter: $gutter * (-1);
+  @include u-space(margin, 'H', false, $gutter * $uni-gutter);
+}
+
+
+@mixin GCell ($dir: $uni-dirDefault) {
+  position: relative;
+  vertical-align: top;
+  @include u-display(inline-block);
+  @include u-fixInlineSpace();
+}
+
+@mixin GColumn ($dir: $uni-dirDefault) {
+  position: relative;
+  float: $dir;
+}
+
+@mixin GColumn--center () {
+  float: none;
+  margin: {
+    #{$uni-dirStart}: auto;
+    #{$uni-dirEnd}: auto;
+  }
+}
+
+@mixin GColumn--oppos ($dir: $uni-dirDefault) {
+  float: oppositeDir($dir);
+}
+
+
+@mixin GContainer($width: false, $maxWidth: false, $adapter: false) {
+  margin-#{$uni-dirStart}: auto;
+  margin-#{$uni-dirEnd}: auto;
+
+  @if($width) {
+    width: $width;
+  } @else  if ($adapter) {
+    width: adapterWidth();
+  }
+
+  @if($maxWidth) {
+    max-width: $maxWidth;
+  } @else {
+    max-width: containerWidth();
+  }
+}
+
+@mixin GAdapter($width: false, $maxWidth: false) {
+  @include GContainer($width, $maxWidth, true);
+}
+
+@mixin GWrapper() {
+  overflow: hidden;
+
+  @include u-space(padding, 'h', false, $uni-gutter, false, 'fixed');
+
+  @if($uni-minWidth) {
+    min-width: $uni-minWidth;
+  }
+}
+
+
+// ==================================================================
+// Main Mixin: used to output classes and silent holders
+// ==================================================================
+
+@mixin ModuleGrid($isSilent: true, $prefix: false) {
+  $class: if($isSilent,'%','.');
+  $silentClass: '%';
+  @if ($prefix){
+    $class: $class + $prefix;
+    $silentClass: $silentClass + $prefix;
+  }
+  $notSilent: if($isSilent, false, true);
+  $output: $uni-outputModulesClasses-Grid;
+
+  @if ($output) or ($isSilent) {
+    // /*
+    //  * Grid wrapper, typically one in the whole document, directly inside body
+    //  */
+    #{$class}GWrapper {
+      @if ($notSilent) {
+        @extend #{$silentClass}GWrapper;
+      } @else {
+        @include GWrapper();
+      }
+    }
+
+    // /*
+    //  * adapter, used to adapt grid zones to a maximum width in fluid layout
+    //  */
+    #{$class}GContainer {
+      @if ($notSilent) {
+        @extend #{$silentClass}GContainer;
+      } @else {
+        @include GContainer();
+      }
+    }
+
+    //
+    // Grid zone, all content must be contained within its child `GCell` elements.
+    //
+    #{$class}GZone {
+      @if ($notSilent) {
+        @extend #{$silentClass}GZone;
+      } @else {
+        @extend #{$silentClass}u-cf;
+      }
+    }
+
+    #{$class}GZone--inline {
+      @if ($notSilent) {
+        @extend #{$silentClass}GZone--inline;
+      } @else {
+        @include GZone--inline();
+      }
+    }
+
+    //
+    // GMatrix GZone for Lists (ul and ol), all content must be contained within its child elements which must extend %GCell.
+    //
+    #{$class}GMatrix {
+      @if ($notSilent) {
+        @extend #{$silentClass}GMatrix;
+      } @else {
+        @extend #{$silentClass}u-cf;
+        @extend #{$silentClass}u-listSimple;
+      }
+    }
+
+
+    //
+    // Grid zone modifier for nested grid zones,
+    // all nested `GCell` elements should have a parent with `GZone GZone--nested` classes
+    //
+    #{$class}GZone--nested {
+      @if ($notSilent) {
+        @extend #{$silentClass}GZone--nested;
+      } @else {
+        @include GZone--nested();
+      }
+    }
+
+    #{$class}GFlexZone{
+      @if ($notSilent) {
+        @extend #{$silentClass}GFlexZone;
+      } @else {
+        display:table;
+        width:100%;
+      }
+    }
+
+
+    #{$class}GFlexCell{
+      @if ($notSilent) {
+        @extend #{$silentClass}GFlexCell;
+      } @else {
+        display: table-cell;
+        vertical-align: top;
+      }
+    }
+
+
+    #{$class}GCell {
+      @if ($notSilent) {
+        @extend #{$silentClass}GCell;
+      } @else {
+        @include GCell();
+      }
+    }
+
+    #{$class}GColumn {
+      @if ($notSilent) {
+        @extend #{$silentClass}GColumn;
+      } @else {
+        @include GColumn();
+      }
+    }
+
+
+    #{$class}GColumn--oppos {
+      @if ($notSilent) {
+        @extend #{$silentClass}GColumn--oppos;
+      } @else {
+        @include GColumn--oppos();
+      }
+    }
+
+    #{$class}GColumn--center {
+      @if ($notSilent) {
+        @extend #{$silentClass}GColumn--center;
+      } @else {
+        @include GColumn--center();
+      }
+    }
+
+  }
+}

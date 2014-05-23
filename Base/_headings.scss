@@ -1,0 +1,6 @@
+@for $i from 1 through 6 {
+  h#{$i} {
+    @extend %base-H;
+    @extend %base-H--h#{$i};
+  }
+}

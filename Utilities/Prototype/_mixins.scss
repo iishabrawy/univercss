@@ -1,0 +1,66 @@
+@mixin u-showGrid {
+  background-color: rgba(#c33, 0.1);
+  background-image:
+    linear-gradient(90deg, rgba(#c33,0.1) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(#c33,0.2) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(white,0.4) gridGutter(1,'fixed'), transparent gridGutter(1,'fixed')),
+    linear-gradient(90deg, rgba(white,0.4) gridGutter(1,'fixed'), transparent gridGutter(1,'fixed'))
+  ;
+  background-size:
+    gridGutter() / $uni-gutter,
+    $uni-column * (gridSpace(1)),
+    $uni-column * (gridSpace(1)),
+    $uni-column * (gridSpace(1))
+  ;
+  background-position:
+    -1px,
+    -1px,
+    0px,
+    - gridGutter(1,'fixed')
+  ;
+}
+
+@mixin u-showRhythm {
+  background-image:
+    linear-gradient(rgba(blue,0.1) 1px, transparent 1px),
+    linear-gradient(rgba(blue,0.1) 1px, transparent 1px)
+  ;
+  background-size:
+    rhythmSpace(1)  rhythmSpace(1),
+    rhythmLine(1)  rhythmLine(1)
+  ;
+
+}
+
+// ==================================================================
+// Main Mixin: used to output classes and silent holders
+// ==================================================================
+
+@mixin UtilityPrototype($isSilent: true, $prefix: false) {
+  $class: if($isSilent,'%','.');
+  $silentClass: '%';
+  @if ($prefix){
+    $class: $class + $prefix;
+    $silentClass: $silentClass + $prefix;
+  }
+  $notSilent: if($isSilent, false, true);
+  $output: $uni-outputUtilitiesClasses-Prototype;
+
+  @if ($output) or ($isSilent) {
+    #{$class}u-showGrid {
+      @if ($notSilent) {
+        @extend #{$silentClass}u-showGrid;
+      } @else {
+        @include u-showGrid();
+      }
+    }
+
+    #{$class}u-showRhythm {
+      @if ($notSilent) {
+        @extend #{$silentClass}u-showRhythm;
+      } @else {
+        @include u-showRhythm();
+      }
+    }
+  }
+}

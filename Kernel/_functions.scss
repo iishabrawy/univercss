@@ -1,0 +1,256 @@
+// =======================================================
+// Helpers
+// =======================================================
+// return the value without its unit
+@function stripUnit($value) {
+  @return $value / ($value * 0 + 1);
+}
+
+
+
+// convert px value to rem
+// eg: pxToRem(14px);
+@function pxToRem($value, $baseFontSize: $uni-baseFontSize)  {
+
+  $value: stripUnit($value) / stripUnit($baseFontSize) * 1rem;
+  @if ($value == 0rem) { $value: 0; } // Turn 0rem into 0
+  @return $value;
+
+}
+
+
+
+// convert rem value to px
+// eg: remToPx(1rem);
+@function remToPx($value, $baseFontSize: $uni-baseFontSize)  {
+
+  $value: $value * $baseFontSize * 1px;
+  @if ($value == 0px) { $value: 0; } // Turn 0px into 0
+  @return $value;
+
+}
+
+
+// convert px values (px unit is optional) to Rem
+// $values can be a list separated by comma between () or by space
+// eg:
+//    rem(10 11px 2, 14px)
+//    rem(10 11px 2);//$baseFontSize: defaults to 14px
+//    rem((10px, 11px, 2px, 5px), $baseFontSize: 14px)
+//    rem((10px, 11px, 2px, 5px));//$baseFontSize: defaults to 14px
+@function rem($values, $baseFontSize: $uni-baseFontSize) {
+
+  $len: length($values);
+
+  @if $len == 1 { @return pxToRem(nth($values, 1), $baseFontSize); }
+
+  $rem-values: ();
+  @for $i from 1 through $len {
+    $rem-values: append($rem-values, pxToRem(nth($values, $i), $baseFontSize));
+  }
+  @return $rem-values;
+
+}
+
+// Greatest common divisor
+@function greatCommonDivisor($a, $b){
+  @if $b == 0 {
+    @return $a;
+  } @else {
+    @return greatCommonDivisor($b, $a%$b);
+  }
+}
+
+// Opposite direction
+@function oppositeDir($dir) {
+  @if ($dir == left) {
+    @return right;
+  } @else {
+    @return left;
+  }
+}
+
+
+// =======================================================
+// Rhythm & Grid functions
+// =======================================================
+// Calculate total units of a container
+@function containerUnits() {
+  $units: $uni-columns * $uni-column;
+
+  @return $units;
+}
+
+// Calculate width of an container
+@function containerWidth() {
+  $units: containerUnits() * $uni-gridUnit;
+
+  @return $units;
+}
+
+// Calculate total units of an adapter
+@function adapterUnits() {
+  $units:  containerUnits() - ($uni-gutter * 2);
+
+  @return $units;
+}
+
+
+// Calculate total width of an adapter
+@function adapterWidth() {
+  $containerUnits: containerUnits();
+  $adapterUnits: adapterUnits();
+
+  @return percentage( $adapterUnits / $containerUnits );
+}
+
+// Calculate Columns Width
+@function columnWidth($i: $uni-columns, $j: $uni-columns, $columnType: $uni-columnType, $gutters: default) {
+
+  $ratio: ($i/$j);
+  $base: $uni-columns;
+
+
+  $spans: $ratio * $base;
+  $columnUnits: $spans * $uni-column;
+
+
+  @if ($gutters != default) {
+    $columnUnits: $columnUnits - ($gutters * $uni-gutter);
+  }
+
+  $columnWidth: 0;
+  @if ($columnType == 'fixed') {
+    $columnWidth: $columnUnits * $uni-gridUnit;
+  } @else {
+    $containerUnits: containerUnits();
+    $columnWidth: percentage( $columnUnits  / $containerUnits);
+  }
+
+  @return $columnWidth;
+}
+
+
+// Calculate vertical spaces
+@function rhythmSpace($n:1) {
+  $spaceHeight: $n * $uni-rhythmUnit;
+  @if ($spaceHeight == 0px) { $spaceHeight: 0; }
+
+  @return $spaceHeight;
+}
+
+// Calculate horizontal spaces
+@function gridSpace($n:1, $spaceType: $uni-columnType) {
+
+  $spaceWidth: 0;
+  @if ($spaceType == 'fixed') {
+    $spaceWidth: $n * $uni-gridUnit;
+  } @else {
+    $containerUnits: containerUnits();
+    $spaceWidth: percentage( $n  / $containerUnits);
+  }
+
+  @if ($spaceWidth == 0px) { $spaceWidth: 0; }
+  @return $spaceWidth;
+}
+
+
+// Calculate gutter width
+@function gridGutter($n:1, $gutterType: $uni-columnType) {
+  $gutterUnits: $n * $uni-gutter;
+  $gutterWidth: gridSpace($gutterUnits, $gutterType);
+
+  @return $gutterWidth;
+}
+
+// Calculate gutter width
+@function rhythmLine($n:1) {
+  $lineUnits: $n * $uni-line;
+  $lineHeight: rhythmSpace($lineUnits);
+
+  @return $lineHeight;
+}
+
+// Calculate gutter width
+@function normalizeSpace($space, $flipIfRtl: false, $dir: $uni-dir) {
+  $len: length($space);
+
+  /* tada1 len: $len */
+  $a: false;
+  $h: false;
+  $v: false;
+
+  $t: 0;
+  $e: 0;
+  $b: 0;
+  $s: 0;
+
+  @if ($len == 1) {
+    $t: nth($space, 1);
+    $e: $t;
+    $b: $t;
+    $s: $t;
+  }
+  @else if ($len == 2) {
+    $t: nth($space, 1);
+    $e: nth($space, 2);
+    $b: $t;
+    $s: $e;
+  }
+  @else if ($len == 3) {
+    $t: nth($space, 1);
+    $e: nth($space, 2);
+    $b: nth($space, 3);
+    $s: $e;
+  }
+  @else if ($len == 4) {
+    $t: nth($space, 1);
+    $e: nth($space, 2);
+    $b: nth($space, 3);
+    $s: nth($space, 4);
+  }
+
+
+  @if ($flipIfRtl) and ($dir == 'rtl') {
+    $temp: $e;
+    $e: $s;
+    $s: $temp;
+  }
+
+
+  $v: if(($t == $b), $b, false);
+  $h: if(($e == $s), $s, false);
+
+  $a: if(($v == $h), $h, false);
+
+  $t: if( $t and (stripUnit($t) == 0), 0, $t);
+  $e: if( $e and (stripUnit($e) == 0), 0, $e);
+  $b: if( $b and (stripUnit($b) == 0), 0, $b);
+  $s: if( $s and (stripUnit($s) == 0), 0, $s);
+  $v: if( $v and (stripUnit($v) == 0), 0, $v);
+  $h: if( $h and (stripUnit($h) == 0), 0, $h);
+  $a: if( $a and (stripUnit($a) == 0), 0, $a);
+
+
+
+  $normalizedSpace: false;
+
+  @if ($a) {
+    $normalizedSpace: $a;
+  }
+  @else {
+    @if ($h) {
+      @if ($v) {
+        $normalizedSpace: $v $h;
+      }
+      @else {
+        $normalizedSpace: $t $h $b;
+      }
+    }
+    @else {
+      $normalizedSpace: $t $e $b $s;
+    }
+  }
+
+  @return $normalizedSpace;
+}

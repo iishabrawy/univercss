@@ -1,0 +1,136 @@
+// Flow utils
+@mixin u-cf() {
+  *zoom: 1;
+
+  &:before, &:after {
+    content: " ";
+    display: table;
+  }
+  &:after {
+    clear: both;
+  }
+}
+
+@mixin u-cff($legacy: true) {
+  display: table-cell;
+  vertical-align: top;
+  width: 10000px !important;
+  @if ($legacy) {
+    //<=IE7
+    *display: block;
+    *zoom: 1;
+    *width: auto !important;
+  }
+
+}
+
+
+@mixin u-float($dir: $uni-dirDefault, $important: false) {
+  @if ($important == true) {
+    float: $dir !important;
+  }
+  @else {
+    float: $dir;
+  }
+}
+
+
+// Display utils
+@mixin u-display($display,$important: false, $legacy: true) {
+   @if ($important == true) {
+    display: $display !important;
+  }
+  @else {
+    display: $display;
+  }
+
+  @if ($display == inline-block) and ($legacy == true) {
+    //<=IE7
+    *display: inline;
+    *zoom: 1;
+  }
+}
+
+// ==================================================================
+// Main Mixin: used to output classes and silent holders
+// ==================================================================
+
+@mixin UtilityFlow($isSilent: true, $prefix: false) {
+  $class: if($isSilent,'%','.');
+  $silentClass: '%';
+  @if ($prefix){
+    $class: $class + $prefix;
+    $silentClass: $silentClass + $prefix;
+  }
+  $notSilent: if($isSilent, false, true);
+  $output: $uni-outputUtilitiesClasses-Flow;
+
+  @if ($output) or ($isSilent) {
+    #{$class}u-cf {
+      @if ($notSilent) {
+        @extend #{$silentClass}u-cf;
+      } @else {
+        @include u-cf();
+      }
+    }
+
+    #{$class}u-cff {
+      @if ($notSilent) {
+        @extend #{$silentClass}u-cff;
+      } @else {
+        @include u-cff();
+      }
+    }
+
+    $optionsFlags: '', 'Oppos', 'None';
+    $options: $uni-dirDefault, $uni-dirOppos, none;
+
+    @for $i from 1 through length($options) {
+      $option: nth($options, $i);
+      $optionFlag: nth($optionsFlags, $i);
+
+      #{$class}u-float#{$optionFlag} {
+        @if ($notSilent) {
+          @extend #{$silentClass}u-float#{$optionFlag};
+        } @else {
+          @include u-float($option, false);
+        }
+      }
+
+      #{$class}u-float#{$optionFlag}Imp {
+        @if ($notSilent) {
+          @extend #{$silentClass}u-float#{$optionFlag}Imp;
+        } @else {
+          @include u-float($option, true);
+        }
+      }
+
+    }
+
+    $optionsFlags: '', 'Oppos', 'Center', 'Justify';
+    $options: $uni-dirDefault, $uni-dirOppos, center, justify;
+
+    @for $i from 1 through length($options) {
+      $option: nth($options, $i);
+      $optionFlag: nth($optionsFlags, $i);
+
+      #{$class}u-align#{$optionFlag} {
+        @if ($notSilent) {
+          @extend #{$silentClass}u-align#{$optionFlag};
+        } @else {
+          text-align: $option;
+        }
+      }
+
+      #{$class}u-align#{$optionFlag}Imp {
+        @if ($notSilent) {
+          @extend #{$silentClass}u-align#{$optionFlag}Imp;
+        } @else {
+          text-align: $option !important;
+        }
+      }
+
+    }
+
+  }
+}

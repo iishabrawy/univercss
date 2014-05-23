@@ -1,0 +1,56 @@
+// ==================================================================
+// Main Mixin: used to output classes and silent holders
+// ==================================================================
+
+@mixin ModuleMedia($isSilent: true, $prefix: false) {
+  $class: if($isSilent,'%','.');
+  $silentClass: '%';
+  @if ($prefix){
+    $class: $class + $prefix;
+    $silentClass: $silentClass + $prefix;
+  }
+  $notSilent: if($isSilent, false, true);
+  $output: $uni-outputModulesClasses-Media;
+
+  @if ($output) or ($isSilent) {
+    #{$class}Media {
+      @if ($notSilent) {
+        @extend #{$silentClass}Media;
+      } @else {
+        @extend #{$silentClass}u-cf;
+      }
+    }
+
+    #{$class}Media_pieceOppos {
+      @if ($notSilent) {
+        @extend #{$silentClass}Media_pieceOppos;
+      } @else {
+        @extend #{$silentClass}u-marginSS;
+        float: $uni-dirOppos;
+        > img {
+          display: block;
+        }
+      }
+    }
+
+    #{$class}Media_piece {
+      @if ($notSilent) {
+        @extend #{$silentClass}Media_piece;
+      } @else {
+        float: $uni-dirDefault;
+        @extend #{$silentClass}u-marginES;
+        > img {
+          display: block;
+        }
+      }
+    }
+
+    #{$class}Media_body {
+      @if ($notSilent) {
+        @extend #{$silentClass}Media_body;
+      } @else {
+        @extend #{$silentClass}u-cff;
+      }
+    }
+  }
+}

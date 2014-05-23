@@ -1,0 +1,90 @@
+// Default direction [rtl|ltr]
+$uni-dir: 'ltr' !default;
+
+$uni-globalBorderBox: true !default;
+
+// Default Sizing unit [1px|1em|1rem]
+$uni-sizeUnit: 1px !default;//px OR em
+
+// Include html classes for rhythm grid system
+// (eg: .GZone .GCell .u-span12 )
+$uni-outputHtmlClasses: false !default;
+$uni-outputModulesClasses: $uni-outputHtmlClasses !default;
+$uni-outputUtilitiesClasses: $uni-outputHtmlClasses !default;
+
+// Direction Configuration
+$uni-dirStart: left;
+$uni-dirEnd: right;
+
+@if ($uni-dir == 'rtl') {
+  $uni-dirStart: right;
+  $uni-dirEnd: left;
+}
+
+$uni-dirDefault: $uni-dirStart;
+$uni-dirOppos: $uni-dirEnd;
+
+
+// ===================================================================
+// Rhythm & Grid varibales
+// ===================================================================
+// Default number of columns in a row [12|24|{INT}]
+$uni-columns: 12 !default;
+
+
+// Default Rhythm Unit (fixed gutters, fixed Columns and vertical spacing are based on this unit)
+$uni-gridUnit: 7 * $uni-sizeUnit !default;//px OR em
+$uni-rhythmUnit: 7 * $uni-sizeUnit !default;//px OR em
+
+// Default Grid Gutter size
+$uni-gutter: 1 !default;//rhythm-unit
+
+// Default Vertical Spacing
+$uni-line: 3 !default;//rhythm-unit
+
+// Default Column size
+$uni-column: 12 !default;//rhythm-unit
+
+// Default Base Font size [{NUM}px] to define root font size,
+// line-heights, em and rem sizing based on this value mainly
+$uni-baseFontSize: 2 * $uni-rhythmUnit !default;//px
+
+$uni-lineHeight: $uni-rhythmUnit * $uni-line;
+
+
+
+// Column Type can be [fluid|fixed].
+$uni-columnType: 'fluid' !default;
+
+
+// Wrapper min-width can be [false|{INT}{cssUnit}].
+$uni-minWidth:   (3 *  $uni-column * $uni-gridUnit) !default;
+
+
+$uni-breakpoints: (
+    'mobi' '(max-width: 320px)',
+    'palm' '(min-width: 321px) and (max-width: 480px)',
+    'lap' '(min-width: 481px) and (max-width: 1024px)',
+    'portable' '(max-width: 1024px)',
+
+    'desk' '(min-width: 1025px) and (max-width: 1224px)',
+    'wide' '(min-width: 1225px) and (max-width: 1824px)',
+    'display' '(min-width: 1025px) and (max-width: 1824px)'
+) !default;
+
+
+$uni-responsive: true !default;
+
+
+// ===================================================================
+// Heading varibales
+// ===================================================================
+// Default heading sizes from h1 to h6 [{INT}px]
+$uni-headingSizes:
+   48px,
+   36px,
+   30px,
+   24px,
+   20px,
+   18px
+!default;

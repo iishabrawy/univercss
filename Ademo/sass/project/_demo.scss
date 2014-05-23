@@ -1,0 +1,126 @@
+// Rhythm Demo
+// Paint Regions for demo purposes
+$demo-grid-bg: #9b59b6;
+$demo-grid-color: #2c3e50;
+
+
+
+.u-purpleBox {
+  @include  box-shadow(rgba(purple, 0.3) 0 0 1px 1px  inset);
+  background: rgba(purple, 0.2);
+}
+
+.u-grayBox {
+  @include  box-shadow(rgba(gray, 0.1) 0 0 0px 1px  inset);
+  background: rgba(147, 128, 108, 0.1);
+}
+
+.u-whiteBox {
+  @include  box-shadow(rgba(gray, 0.3) 0 0 1px 1px  inset);
+  background: rgba(white, 0.5);
+}
+
+.u-greenBox {
+  @include  box-shadow(rgba(green, 0.5) 0 0 1px 1px  inset);
+  background: rgba(green, 0.4);
+  color: #fff;
+}
+
+
+
+.GCell {
+
+}
+
+.GZone {
+  // @extend .u-grayBox;
+}
+
+.GZone--nested {
+
+}
+
+.GCell {
+  // @extend .u-purpleBox;
+}
+
+.u-gridDemo .GCell_content {
+  @extend .u-greenBox;
+}
+
+.GCell_content {
+  @extend .u-whiteBox;
+}
+
+.GZone,
+.GZone--nested {
+  margin-bottom: rhythmSpace();
+}
+
+.GWrapper {
+
+}
+
+
+
+.Button {
+  background-color: $demo-grid-bg;
+  color: #fff;
+  @include border-radius(3px);
+  &:hover,
+  &:focus,
+  &:active {
+    background-color: lighten($demo-grid-bg, 3%);
+  }
+
+  &:active {
+    @include box-shadow(darken($demo-grid-bg, 3%) 0 1px 2px 1px inset);
+  }
+}
+
+.Navly {
+  a {
+    background-color: $demo-grid-bg;
+    color: #fff;
+    // @include border-radius(3px);
+    &:hover,
+    &:focus,
+    &:active {
+      background-color: white;
+      color: $demo-grid-bg;
+    }
+
+    &:active {
+      background-color: #eee;
+      @include transition-duration(0s);
+    }
+
+    @include transition-property(background, color);
+    @include transition-duration(1s);
+    // @include transition-delay(0, 0, 0.3s);
+  }
+}
+.Nav_sub {
+  @extend %u-span3Fixed;
+}
+
+.Navly li:hover,
+.Nav_item--open {
+  > .Nav_sub {
+    // @include translateX(0);
+    // @include opacity(1);
+  }
+}
+
+.Menu,
+.Nav {
+  @extend %u-list__linksSizeS;
+}
+
+.Breadcrumb {
+  @extend %u-list__linksSizeT;
+}
+
+body {
+  color: $demo-grid-color;
+}

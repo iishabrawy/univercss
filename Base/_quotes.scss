@@ -1,0 +1,15 @@
+// Quotes
+blockquote {
+  @extend %base-u-rhythmBlockMargin;
+  @extend %base-u-rhythmBlockIndentMargin;
+
+  p:last-of-type{
+    margin-bottom: 0;
+  }
+}
+
+q {
+
+}
+
+

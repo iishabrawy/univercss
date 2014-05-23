@@ -1,0 +1,185 @@
+/*
+  ## Native Html elements
+  Normalize Forms and Content (I/O)
+*/
+form {
+
+}
+
+fieldset {
+
+}
+
+/*
+  ## Modules
+  Modular UI Modules, typically combine multiple elements to form one module.
+  Syntax: [{namespace}-]{ModuleName}[-{AltName}][--{modifierName}][__{descendantModifierName}][_{descendantName}]
+    + nameSpace: {namespace}-{ModuleName};
+    + modifier: {ModuleName}--{modifierName}
+    + alternative: {ModuleName}-{AltName}
+    + descendant modifier: {ModuleName}__{descendantModifierName}
+    + descendent: {ModuleName}_{descendantName}
+    + state: {ModuleName}.is-stateOfModule
+
+*/
+
+/*
+  ## Namspaces
+  Modules can be prefixed with a namspace to avoid potential conflicts
+  between your code and/or other libraries.
+  Namespaces must use camelCase style, followed by a dash and the module name
+*/
+.nameSpace-ModuleName {
+
+}
+
+/* eg zf: Zurb Foundation Panel */
+.zf-Panel {
+
+}
+
+
+
+/*
+  ## Module
+  Modules must use PascalCase style.
+*/
+.ModuleName {
+
+}
+
+.nameSpace-ModuleName {
+
+}
+
+/*
+  ## Modifiers
+  Modifiers are classes that modifies or extends default Module styles.
+  Modofiers must use camelCase style and be prefixed by module name and two dashes (--).
+  In html, a Modifier class should be used in addition to the base module class:
+  <element class="ModuleName ModuleName--modifierName">content</element>
+*/
+.ModuleName {
+  /* base styles */
+  /* default styles */
+}
+
+.ModuleName--modifierName {
+  /* override and expand default styles */
+}
+
+
+
+
+/*
+  ## Module Alternavite
+  Module Alternatives are classes that provide alternatives to default Module styles.
+  Module Alternatives must use PascalCase style and be prefixed by module name and a dash (-).
+  In html, a Modifier class could and should be used without the Module class:
+  <element class="ModuleName-AltName">content</element>
+*/
+.ModuleName,
+.ModuleName-AltName {
+  /* base styles */
+}
+
+.ModuleName {
+  /* default styles */
+}
+
+.ModuleName-AltName {
+  /* alternative styles */
+}
+
+
+
+
+/*
+  ## Descendant Modifiers
+  Descendant Modifiers are classes that modifies or extends default Module styles for descendant elements of a Module.
+  Descendant Modofiers must use camelCase style and be prefixed by module name, two underscores (__).
+  In html, a Descendant Modifier class should be used in addition to the base module class:
+  <element class="ModuleName ModuleName__descendantModifierName">
+    <element class="DescendantName">content</element>
+    <element class="DescendantName">content</element>
+  </element>
+*/
+.ModuleName {
+    /* Module styles */
+}
+
+.ModuleName__modifierName .descendant {
+    /* child styles */
+}
+
+/*
+  ## Module Descendant
+  Descendants are classes of a descendant element  of a (Parent) Module.
+  Descendants must use cascalCase style and be prefixed by module name and an underscore (_).
+  In html:
+  <element class="ModuleName">
+    <element class="ModuleName_descendantName">content</element>
+    <element class="ModuleName_descendantName">content</element>
+  </element>
+*/
+.ModuleName {
+    /* Module styles */
+}
+
+.ModuleName_descendantName {
+    /* Descendant styles */
+}
+
+/*
+  ## Utilities
+  Utilities are low-level structural and positional classes,
+  Utilities must use cascalCase style and be prefixed by "u" and a dash (-).
+  Utilities can have flags attached to them as .u-utilityNameFlag, possible flags are:
+    - Imp: Important;
+  Utilities can be used directly to any element within a Module:
+  <element class="ModuleName u-utilityName"></element>
+*/
+.u-utilityName {
+
+}
+.u-utilityNameFlag {
+
+}
+
+/*
+  ## Prefixes
+  - g: prefix for classes used as a grid system to organize other Modules.
+    <element class="g-Zone">
+      <element class="g-Cell">{Module}</element>
+      <element class="g-Cell">{Module}</element>
+    </element>
+  - is:  general state shared by multiple modules (for states of a specific Module, a modifer should be sued instead)
+    <element class="ModuleName is-disabled"></element>
+    <element class="is-invisible"></element>
+*/
+
+/*
+layout Modules
+*/
+.g-ModuleName {
+
+}
+
+/*
+ Module styles in a specific state
+*/
+.ModuleName.is-disabled {
+
+}
+
+/*
+Generic states
+*/
+.is-close {
+
+}
+
+.is-animated {
+
+}
+

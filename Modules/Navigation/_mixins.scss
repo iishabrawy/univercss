@@ -1,0 +1,133 @@
+// ==================================================================
+// Main Mixin: used to output classes and silent holders
+// ==================================================================
+
+@mixin ModuleNavigation($isSilent: true, $prefix: false) {
+  $class: if($isSilent,'%','.');
+  $silentClass: '%';
+  @if ($prefix){
+    $class: $class + $prefix;
+    $silentClass: $silentClass + $prefix;
+  }
+  $notSilent: if($isSilent, false, true);
+  $output: $uni-outputModulesClasses-Navigation;
+
+  @if ($output) or ($isSilent) {
+    #{$class}Nav {
+      @if ($notSilent) {
+        @extend #{$silentClass}Nav;
+      } @else {
+        @extend #{$silentClass}u-listSimple;
+        @extend #{$silentClass}u-list__itemsFlowFloat;
+        @extend #{$silentClass}u-list__linksInlineBlock;
+        @extend #{$silentClass}u-cf;
+      }
+    }
+
+    #{$class}Navline {
+      @if ($notSilent) {
+        @extend #{$silentClass}Navline;
+      } @else {
+        @extend #{$silentClass}u-listSimple;
+        @extend #{$silentClass}u-list__itemsFlowInline;
+        @extend #{$silentClass}u-list__linksInlineBlock;
+      }
+    }
+
+    #{$class}Navline--collapse {
+      @if ($notSilent) {
+        @extend #{$silentClass}Navline--collapse;
+      } @else {
+        @extend #{$silentClass}u-list__itemsFlowInlineCollapse;
+      }
+    }
+
+    #{$class}Menu {
+      @if ($notSilent) {
+        @extend #{$silentClass}Menu;
+      } @else {
+        @extend #{$silentClass}u-listSimple;
+        @extend #{$silentClass}u-list__linksBlock;
+      }
+    }
+
+    #{$class}Breadcrumb {
+      @if ($notSilent) {
+        @extend #{$silentClass}Breadcrumb;
+      } @else {
+        @extend #{$silentClass}u-listSimple;
+        @extend #{$silentClass}u-list__itemsFlowInline;
+        @extend #{$silentClass}u-list__linksInlineBlock;
+        > li {
+          &:before {
+            content:"\00BB" "\00A0";
+          }
+          &:first-child:before {
+            content:"";
+          }
+          &[data-breadcrumb]:before{
+            content:attr(data-breadcrumb) "\00A0";
+          }
+        }
+      }
+    }
+
+    #{$class}Breadcrumb_root{
+      @if ($notSilent) {
+        @extend #{$silentClass}Breadcrumb_root;
+      } @else {
+        font-weight:bold;
+      }
+    }
+
+
+    #{$class}Navly{
+      @if ($notSilent) {
+        @extend #{$silentClass}Navly;
+      } @else {
+        li {
+          &,
+          > a {
+            position: relative;
+          }
+          &.Nav_item__subFull {
+            position: static;
+          }
+        }
+      }
+    }
+
+    #{$class}Nav_sub{
+      @if ($notSilent) {
+        @extend #{$silentClass}Nav_sub;
+      } @else {
+        position: absolute;
+        top: 100%;
+        #{$uni-dirStart}: 0;
+        z-index: 99;
+        display: none;
+        .Navly li:hover > &,
+        .Nav_item--hover > & {
+          display: block;
+        }
+        & & {
+          top: 0;
+          #{$uni-dirStart}: 100%;
+        }
+      }
+    }
+
+    #{$class}Nav_sub--oppos{
+      @if ($notSilent) {
+        @extend #{$silentClass}Nav_sub--oppos;
+      } @else {
+        #{$uni-dirStart}: auto;
+        #{$uni-dirEnd}: 0;
+        & & {
+          #{$uni-dirStart}: auto;
+          #{$uni-dirEnd}: 100%;
+        }
+      }
+    }
+  }
+}

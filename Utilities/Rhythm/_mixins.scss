@@ -1,0 +1,175 @@
+@mixin u-mediaQuery($mediaQuery, $breakpoints: $uni-breakpoints){
+  $foundFlag: false;
+
+  @each $breakpoint in $breakpoints{
+    $name: nth($breakpoint, 1);
+    $declaration: nth($breakpoint, 2);
+
+    @if ($mediaQuery == $name) and $declaration {
+      $foundFlag: true;
+
+      @media only screen and #{$declaration}{
+        @content;
+      }
+    }
+  }
+
+  @if $foundFlag == false{
+    @warn "Breakpoint ‘#{$mediaQuery}’ does not exist";
+  }
+}
+
+// box sizing
+@mixin u-borderBox ($force: false) {
+  @if ($uni-globalBorderBox) or ($force) {
+    @include box-sizing(border-box);
+  }
+}
+
+
+
+// Sizing utils
+@mixin u-gridGutter($n:1, $dir: 'h', $gutterType: 'fixed') {
+  @include u-space(padding, 'h', false, $n * $uni-gutter, false, $gutterType);
+}
+
+
+@mixin u-span ($i: 1, $j: $uni-columns, $columnType: $uni-columnType, $gutters: default) {
+  width: columnWidth($i,$j, $columnType, $gutters);
+}
+
+
+// remove inline spaces when using display: inline-block instead of float
+@mixin u-removeInlineSpace() {
+  // approach 1
+  letter-spacing: -0.31em; /* Webkit: collapse white-space between units */
+  *letter-spacing: normal; /* reset IE < 8 */
+  *word-spacing: -0.43em; /* IE < 8: collapse white-space between units */
+  text-rendering: optimizespeed; /* Webkit: fixes text-rendering: optimizeLegibility */
+
+
+  /* Opera as of 12 on Windows needs word-spacing.
+    The ".opera-only" selector is used to prevent actual prefocus styling
+    and is not required in markup.
+  */
+  .opera:-o-prefocus,
+  & {
+    word-spacing: -0.43em;
+  }
+
+  // approach 2 (oesn’t work on Android Webkit)
+  // @include font-size: 0;
+}
+
+// return back inline spaces removed in the parent element by (u-removeInlineSpace)
+@mixin u-fixInlineSpace() {
+  // approach 1
+  letter-spacing: normal;
+  *word-spacing: normal;
+  text-rendering: auto;
+
+  // approach 2 (oesn’t work on Android Webkit)
+  // @include u-fontSize(); // font-size base
+}
+
+@mixin u-fontSize($fontSize: $uni-baseFontSize, $lineHeight: false){
+  font-size: $fontSize;
+  font-size: rem($fontSize);
+  @if $lineHeight == true{
+    line-height: ceil( $fontSize / $uni-lineHeight ) * ( $uni-lineHeight / $fontSize );
+  }
+}
+
+
+// ==================================================================
+// Main Mixin: used to output classes and silent holders
+// ==================================================================
+
+@mixin UtilityRhythm($isSilent: true, $prefix: false) {
+  $class: if($isSilent,'%','.');
+  $silentClass: '%';
+  @if ($prefix){
+    $class: $class + $prefix;
+    $silentClass: $silentClass + $prefix;
+  }
+  $notSilent: if($isSilent, false, true);
+  $output: $uni-outputUtilitiesClasses-Rhythm;
+
+  @if ($output) or ($isSilent) {
+
+    #{$class}u-borderBox {
+      @if ($notSilent) {
+        @extend #{$silentClass}u-borderBox;
+      } @else {
+        @include u-borderBox();
+      }
+    }
+
+    // =====================================================================================
+    // Sizing utilities
+    // for Grid cell width:
+    //  - use number of spans of the total number (12 by default) of columns: .u-span1 means (1 of 12)
+    //  - or relative size: .u-span1of2 (the same as .u-span6 (6 of 12))
+    // =====================================================================================
+    @for $i from 1 through $uni-columns {
+      @if ($uni-columnType != 'fixed') {
+        #{$class}u-span#{$i}Fixed {
+          @if ($notSilent) {
+            @extend #{$silentClass}u-span#{$i}Fixed;
+          } @else {
+            @include u-span($i, $uni-columns, 'fixed', default);
+          }
+        }
+      }
+
+
+      #{$class}u-span#{$i} {
+        @if ($notSilent) {
+          @extend #{$silentClass}u-span#{$i};
+        } @else {
+          @include u-span($i);
+        }
+      }
+
+      @for $j from 1 through $i {
+        $ratio: ($j / $i) * $uni-columns;
+        @if ($i != $uni-columns) and ($i != $j) and (greatCommonDivisor($i,$j) == 1) and ($ratio % 1 == 0) {
+          #{$class}u-span#{$j}of#{$i}{
+            @extend #{$silentClass}u-span#{$ratio};
+          }
+        }
+      }
+
+      @if (($uni-columns % $i) == 0) {
+        #{$class}u-matrix#{$i} {
+          @if ($notSilent) {
+            @extend #{$silentClass}u-matrix#{$i};
+          } @else {
+            %GColumn,
+            %GCell {
+              @extend #{$silentClass}u-span#{$i};
+            }
+          }
+        }
+      }
+
+    }
+
+    #{$class}u-island {
+      @if ($notSilent) {
+        @extend #{$silentClass}u-island;
+      } @else {
+        padding: normalizeSpace(rhythmSpace(2) gridSpace(2,'fixed'));
+      }
+    }
+
+    #{$class}u-islet {
+      @if ($notSilent) {
+        @extend #{$silentClass}u-islet;
+      } @else {
+        padding: normalizeSpace(rhythmSpace(1) gridSpace(1,'fixed'));
+      }
+    }
+
+  }
+}

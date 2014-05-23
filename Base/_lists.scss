@@ -1,0 +1,33 @@
+// lists
+menu {
+  @extend %base-u-rhythmBlockMargin;
+}
+
+
+
+dl {
+  @extend %base-u-rhythmBlockMargin;
+  @extend %base-u-rhythmBlockIndentMargin;
+  dd > & {
+    margin-bottom: 0;
+  }
+}
+
+ul,
+ol {
+  @extend %base-u-rhythmBlockMargin;
+  @extend %base-u-rhythmBlockIndentMargin;
+  @extend %base-u-rhythmBlockIndentPadding;
+  li > &,
+  dd > & {
+    margin-bottom: 0;
+  }
+}
+
+dd {
+  @extend %base-u-rhythmBlockIndentMargin;
+}
+
+dt {
+  font-weight: bold;
+}

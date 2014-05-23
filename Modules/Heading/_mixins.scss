@@ -1,0 +1,62 @@
+// ==================================================================
+// Main Mixin: used to output classes and silent holders
+// ==================================================================
+
+@mixin ModuleHeading($isSilent: true, $prefix: false) {
+  $class: if($isSilent,'%','.');
+  $silentClass: '%';
+  @if ($prefix){
+    $class: $class + $prefix;
+    $silentClass: $silentClass + $prefix;
+  }
+  $notSilent: if($isSilent, false, true);
+  $output: $uni-outputModulesClasses-Heading;
+
+  @if ($output) or ($isSilent) {
+    #{$class}H {
+      @if ($notSilent){
+        @extend #{$silentClass}H;
+      } @else {
+        @extend #{$silentClass}u-rhythmBlockMargin;
+        font-weight: bold;
+        small {
+          font-weight: normal;
+        }
+        %HGroup & {
+          margin-bottom: 0;
+        }
+      }
+    }
+
+
+
+    @for $i from 1 through 6 {
+      $hSize: nth($uni-headingSizes, $i);
+
+      #{$class}H--h#{$i} {
+        @if ($notSilent) {
+          @extend #{$silentClass}H--h#{$i};
+        } @else {
+          @include u-fontSize($hSize, true);
+        }
+      }
+    }
+
+
+    #{$class}HGroup {
+      @if ($notSilent) {
+        @extend #{$silentClass}HGroup;
+      } @else {
+        @extend #{$silentClass}u-rhythmBlockMargin;
+      }
+    }
+
+    #{$class}HSub {
+      @if ($notSilent) {
+        @extend #{$silentClass}HSub;
+      } @else {
+        font-weight: normal;
+      }
+    }
+  }
+}

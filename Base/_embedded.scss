@@ -1,0 +1,24 @@
+// get images and embeds to work properly
+img,
+object,
+embed {
+  max-width: 100%;
+  height: auto;
+}
+
+object,
+embed {
+  height: 100%;
+}
+img {
+  -ms-interpolation-mode: bicubic;
+}
+
+#map_canvas,
+.map_canvas {
+  img,
+  embed,
+  object {
+    max-width: none !important;
+  }
+}
